@@ -1511,6 +1511,18 @@ static void m_protoctl(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
+static void m_md(sourceinfo_t *si, int parc, char *parv[])
+{
+	user_t *u;
+	
+	u = user_find(parv[1]);
+	
+	if (u == NULL)
+		return;
+	if (!irccasecmp(parv[2], "certfp"))
+		handle_certfp(si, u, parv[3]);
+}
+
 void _modinit(module_t * m)
 {
 	MODULE_TRY_REQUEST_DEPENDENCY(m, "transport/rfc1459");
@@ -1597,6 +1609,7 @@ void _modinit(module_t * m)
 	pcommand_add("PROTOCTL", m_protoctl, 1, MSRC_UNREG);
 	pcommand_add("SASL", m_sasl, 4, MSRC_SERVER);
 	pcommand_add("MLOCK", m_mlock, 3, MSRC_SERVER);
+	pcommand_add("MD", m_md, 3, MSRC_SERVER);
 
 	hook_add_event("nick_group");
 	hook_add_nick_group(nick_group);
